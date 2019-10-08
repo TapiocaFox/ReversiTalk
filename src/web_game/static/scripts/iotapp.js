@@ -1,4 +1,11 @@
 
+let iottalk_endpoint = localStorage.getItem('iottalk_endpoint');;
+
+let setIoTtalkEndpoint = ()=> {
+  iottalk_endpoint = prompt("Please enter your url", iottalk_endpoint);
+  localStorage.setItem('iottalk_endpoint', iottalk_endpoint);
+  window.location.reload();
+};
 
 let profile = {
   'dm_name': 'ReversiTalk',
@@ -7,9 +14,9 @@ let profile = {
   'd_name': undefined,
 };
 
-function init () {
-  console.log(profile);
-  ReversiAPI.UI.setDescriptionStatus('Connected as "'+profile.d_name+'"');
+function init (data) {
+  console.log(profile, data);
+  ReversiAPI.UI.setDescriptionStatus((profile.d_name?'Connected as "'+profile.d_name+'". ':"Connect Failed. ")+'<br/><span onClick="setIoTtalkEndpoint()">Click to set IoTtalk endpoint</span>.');
   ReversiAPI.on('BoardUpdated', (data)=> {
     dan.push('ReversiMonitor', {event: 'BoardUpdated', data: data});
   });
@@ -89,7 +96,7 @@ function ReversiMonitor (data) {
 }
 
 
-csmapi.set_endpoint ('http://7.iottalk.tw:9999');
+csmapi.set_endpoint(iottalk_endpoint);
 
 dai(profile,  {
     'ida_init': init,
