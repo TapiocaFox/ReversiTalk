@@ -16,7 +16,7 @@ presets.o = function (x, y, s, dx, dy) {
             this.y += this.dy;
 
             ctx.beginPath();
-            ctx.arc(this.x + + Math.sin((50 + x + (t / 10)) / 100) * 3, this.y + + Math.sin((45 + x + (t / 10)) / 100) * 4, this.r, 0, 2 * Math.PI, false);
+            ctx.arc(this.x + + Math.sin((50 + x + (t / 10)) / 100) * 8, this.y + + Math.sin((45 + x + (t / 10)) / 100) * 10, this.r, 0, 4 * Math.PI, false);
             ctx.lineWidth = this.w;
             // console.log(s);
             ctx.strokeStyle = 'rgba(244, 65, 131, '+s/1.2+')';
@@ -54,8 +54,8 @@ presets.x = function (x, y, s, dx, dy, dr, r) {
 
             ctx.save();
 
-            ctx.translate(this.x + Math.sin((x + (t / 10)) / 100) * 5, this.y + Math.sin((10 + x + (t / 10)) / 100) * 2);
-            ctx.rotate(this.r * Math.PI / 180);
+            ctx.translate(this.x + Math.sin((x + (t / 10)) / 100) * 8, this.y + Math.sin((10 + x + (t / 10)) / 100) * 6);
+            ctx.rotate(this.r * Math.PI / 120);
 
             line(-1, -1, 1, 1, 'rgba(66, 134, 244, '+s/1.2+')');
             line(1, -1, -1, 1, 'rgba(66, 134, 244, '+s/1.2+')');

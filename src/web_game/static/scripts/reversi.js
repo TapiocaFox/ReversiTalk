@@ -28,28 +28,42 @@ let UI = {
   },
   setEmphasizedRedChess: (position)=> {
     let x=document.getElementById('r'+position[0]+'c'+position[1]);
-    x.innerHTML = "<div class=\"reversi-board-red-emphasize\"></div>";
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-emphasize\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-emphasize\"></div>", "");
+    x.innerHTML += "<div class=\"reversi-board-red-emphasize\"></div>";
   },
   setEmphasizedBlueChess: (position)=> {
     let x=document.getElementById('r'+position[0]+'c'+position[1]);
-    x.innerHTML = "<div class=\"reversi-board-blue-emphasize\"></div>";
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-emphasize\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-emphasize\"></div>", "");
+    x.innerHTML += "<div class=\"reversi-board-blue-emphasize\"></div>";
   },
   setRedChess: (position)=> {
     let x=document.getElementById('r'+position[0]+'c'+position[1]);
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red\"></div>", "");
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-emphasize\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-emphasize\"></div>", "");
     x.innerHTML += "<div class=\"reversi-board-red\"></div>";
   },
   setBlueChess: (position)=> {
     let x=document.getElementById('r'+position[0]+'c'+position[1]);
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red\"></div>", "");
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-emphasize\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-emphasize\"></div>", "");
     x.innerHTML += "<div class=\"reversi-board-blue\"></div>";
   },
   setEmptyChess: (position)=> {
     let x=document.getElementById('r'+position[0]+'c'+position[1]);
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red\"></div>", "");
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-emphasize\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-emphasize\"></div>", "");
   },
   setRightScore: (point)=> {
     let x=document.getElementById("point-right");
@@ -105,15 +119,25 @@ let UI = {
     let x=document.getElementById('r'+UI.RedPointer[0]+'c'+UI.RedPointer[1]);
     x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-pointer\"></div>", "<div class=\"reversi-board-red-pointer-hide\"></div>");
   },
-  renderBoard: (board)=> {
+  renderBoard: (board, position)=> {
     for (let x=0; x<8; x++) {
     for (let y=0; y<8; y++) {
       switch (board[x*8+y]) {
         case 1:
-          UI.setBlueChess([x, y]);
+          if(position&&x===position[0]&&y===position[1]) {
+            UI.setEmphasizedBlueChess([x, y]);
+          }
+          else {
+            UI.setBlueChess([x, y]);
+          }
           break;
         case -1:
-          UI.setRedChess([x, y]);
+          if(position&&x===position[0]&&y===position[1]) {
+            UI.setEmphasizedRedChess([x, y]);
+          }
+          else {
+            UI.setRedChess([x, y]);
+          }
           break;
         case 0:
           UI.setEmptyChess([x, y]);
@@ -136,6 +160,10 @@ let UI = {
   },
   setBoardStatus: (status)=> {
     let board_status = document.getElementById("board-status");
+    board_status.innerHTML = status;
+  },
+  setDescriptionStatus: (status)=> {
+    let board_status = document.getElementById("description-status");
     board_status.innerHTML = status;
   },
   showLoadingStatus: (status)=> {
@@ -408,18 +436,23 @@ let RequestEmmiter = {
     RequestEmmiter.reflashBoard();
   },
   setPosition: (player, position)=> {
+    let turn = game.returnPlayerTurn();
+    if(player !== turn) {
+      UI.flashStatus('Not your turn.');
+      return 0;
+    }
     let result = game.setPosition(player, position);
     if(result>0) {
-      RequestEmmiter.reflashBoard();
+      RequestEmmiter.reflashBoard(position);
     }
     else {
       UI.flashStatus('You cannot set here.');
     }
   },
-  reflashBoard: ()=> {
+  reflashBoard: (position)=> {
     let scores = game.returnScores();
     let player_turn = game.returnPlayerTurn();
-    UI.renderBoard(game.returnBoard());
+    UI.renderBoard(game.returnBoard(), position);
     // console.log(game.returnBoard());
     // try {
     //   throw new Error();
@@ -442,6 +475,10 @@ let RequestEmmiter = {
       UI.enableRedPointer();
     }
   }
+};
+
+var ReversiAPI = {
+  UI: UI
 };
 
 //initailize

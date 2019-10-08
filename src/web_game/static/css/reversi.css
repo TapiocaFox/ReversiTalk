@@ -139,6 +139,11 @@
   margin-left: 50px;
   height: 440px;
   max-width: 450px;
+  width: auto;
+  font-size: 15px;
+}
+.reversi-description h2{
+  font-size: 18px;
 }
 .reversi-point-left{
   position: absolute;
