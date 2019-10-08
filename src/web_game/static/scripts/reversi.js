@@ -442,13 +442,13 @@ let RequestEmmiter = {
 
     if(player_turn === 1) {
       UI.setBoardStatus('It is Blue\'s turn.');
-      UI.disableRedPointer();
-      UI.enableBluePointer();
+      // UI.disableRedPointer();
+      // UI.enableBluePointer();
     }
     else if(player_turn === -1){
       UI.setBoardStatus('It is Red\'s turn.');
-      UI.disableBluePointer();
-      UI.enableRedPointer();
+      // UI.disableBluePointer();
+      // UI.enableRedPointer();
     }
   }
 };

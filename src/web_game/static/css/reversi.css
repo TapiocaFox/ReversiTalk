@@ -430,19 +430,19 @@
   /* animation: wobble 0.4s ; */
 }
 @keyframes red_wobble {
-   0% { transform: translateX(0%); height: 39px; width: 39px;left: -2px;top: -2px; border: 4px dashed #f44183;}
+   0% { transform: translateX(0%); height: 50px; width: 50px;left: -5px;top: -5px; border: 6px dashed #f44183;}
    15% { transform: translateX(-8%) rotate(-6deg); }
    30% { transform: translateX(7%) rotate(4deg); }
-   45% { transform: translateX(-5%) rotate(-2deg); height: 33px; width: 33px;}
+   45% { transform: translateX(-5%) rotate(-2deg); height: 33px; width: 33px; border: 3px dashed #f44183;}
    60% { transform: translateX(3%) rotate(1deg); }
    75% { transform: translateX(-1%) rotate(-0.5deg); }
    100% { transform: translateX(0%); }
 }
 @keyframes blue_wobble {
-   0% { transform: translateX(0%); height: 39px; width: 39px;left: -2px;top: -2px; border: 4px dashed #4286f4;}
+   0% { transform: translateX(0%); height: 50px; width: 50px;left: -5px;top: -5px; border: 6px dashed #4286f4;}
    15% { transform: translateX(8%) rotate(6deg); }
    30% { transform: translateX(-7%) rotate(-4deg); }
-   45% { transform: translateX(5%) rotate(2deg); height: 33px; width: 33px;}
+   45% { transform: translateX(5%) rotate(2deg); height: 33px; width: 33px; border: 3px dashed #4286f4;}
    60% { transform: translateX(-3%) rotate(-1deg); }
    75% { transform: translateX(1%) rotate(0.5deg); }
    100% { transform: translateX(0%); }
