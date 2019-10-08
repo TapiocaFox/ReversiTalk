@@ -28,7 +28,7 @@ function ReversiBlueController (data) {
 
   }
   else {
-    ReversiAPI.UI.setBlueMeta('IoTPlayerBlue', 'IoTtalk connected.');
+    ReversiAPI.UI.setBlueMeta('IoTPlayerBlue', 'IoTtalk controller.');
   }
   console.log(data);
   // left
@@ -56,6 +56,12 @@ function ReversiBlueController (data) {
 function ReversiRedController (data) {
   let command_code = data[0];
   console.log(data);
+  if(data[1].status) {
+
+  }
+  else {
+    ReversiAPI.UI.setBlueMeta('IoTPlayerRed', 'IoTtalk controller.');
+  }
   // left
   if(command_code === 1) {
     ReversiAPI.UI.setRedPointer([ReversiAPI.UI.RedPointer[0], ReversiAPI.UI.RedPointer[1]-1]);

@@ -400,9 +400,14 @@ let RequestEmmiter = {
     });
   },
   setPosition: (player, position)=> {
-    let turn = game.returnPlayerTurn();
-    if(player !== turn) {
-      UI.flashStatus('Not your turn.');
+    let player_turn = game.returnPlayerTurn();
+    if(player !== player_turn) {
+      if(player_turn === 1) {
+        UI.flashStatus('It is Blue\'s turn.');
+      }
+      else if(player_turn === -1){
+        UI.flashStatus('It is Red\'s turn.');
+      }
       return 0;
     }
     let result = game.setPosition(player, position);
@@ -436,12 +441,12 @@ let RequestEmmiter = {
     UI.setLeftScore(scores[1]);
 
     if(player_turn === 1) {
-      UI.setBoardStatus('It is Blue\'s turn');
+      UI.setBoardStatus('It is Blue\'s turn.');
       UI.disableRedPointer();
       UI.enableBluePointer();
     }
     else if(player_turn === -1){
-      UI.setBoardStatus('It is Red\'s turn');
+      UI.setBoardStatus('It is Red\'s turn.');
       UI.disableBluePointer();
       UI.enableRedPointer();
     }
@@ -517,8 +522,8 @@ function initailizeReversi () {
   };
   UI.initBoard();
   UI.showLoadingStatus('connecting to IoTtalk server...');
-  UI.setBlueMeta('Blue', 'IoTtalk controller not connected');
-  UI.setRedMeta('Red', 'IoTtalk controller not connected');
+  UI.setBlueMeta('Blue', 'Keyboard controller');
+  UI.setRedMeta('Red', 'Keyboard controller');
 
   setTimeout(()=> {
     game.newBoard();
