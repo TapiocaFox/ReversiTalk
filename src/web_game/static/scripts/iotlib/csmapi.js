@@ -1,5 +1,5 @@
 var csmapi = (function () {
-    var ENDPOINT = "https://7.iottalk.tw/";
+    var ENDPOINT = null;
 
     function set_endpoint (endpoint) {
         ENDPOINT = endpoint;
@@ -15,9 +15,9 @@ var csmapi = (function () {
             url: ENDPOINT +'/'+ mac_addr,
             data: JSON.stringify({'profile': profile}),
             contentType:"application/json; charset=utf-8",
-        }).done(function () {
+        }).done(function (result) {
             if (callback) {
-                callback(true);
+                callback(true, result.d_name, result.password);
             }
         }).fail(function () {
             if (callback) {
@@ -42,11 +42,12 @@ var csmapi = (function () {
         });
     }
 
-    function pull (mac_addr, odf_name, callback) {
+    function pull (mac_addr, password, odf_name, callback) {
         $.ajax({
             type: 'GET',
             url: ENDPOINT +'/'+ mac_addr +'/'+ odf_name,
             contentType:"application/json; charset=utf-8",
+            headers: {'password-key': password},
         }).done(function (obj) {
             if (typeof obj === 'string') {
                 obj = JSON.parse(obj);
@@ -62,12 +63,13 @@ var csmapi = (function () {
         });
     }
 
-    function push (mac_addr, idf_name, data, callback) {
+    function push (mac_addr, password, idf_name, data, callback) {
         $.ajax({
             type: 'PUT',
             url: ENDPOINT +'/'+ mac_addr +'/'+ idf_name,
             data: JSON.stringify({'data': data}),
             contentType:"application/json; charset=utf-8",
+            headers: {'password-key': password},
         }).done(function () {
             if (callback) {
                 callback(true);

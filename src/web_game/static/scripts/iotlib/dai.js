@@ -1,5 +1,7 @@
 const dai = function (profile, ida) {
-    var df_func = {};
+    var odf_func = {};
+	var idf_func = {};
+	
     var mac_addr = (function () {
         function s () {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -9,22 +11,39 @@ const dai = function (profile, ida) {
         return s() + s() + s();
     })();
 
-    if (profile.is_sim == undefined){
-        profile.is_sim = false;
-    }
-
-    for (var i = 0; i < profile.df_list.length; i++) {
-        df_name = profile.df_list[i].name;
-        if(df_name[df_name.length-2] == '_'){
-            df_name = df_name.substr(0, df_name.length-2) + '-' + df_name.substr(df_name.length-1);
+    if (profile.is_sim == undefined)   profile.is_sim = false;
+    if (profile.idf_list == undefined) profile.idf_list = [];
+    if (profile.odf_list == undefined) profile.odf_list = [];	
+    
+    profile['df_list']=[];
+    for (var i = 0; i < profile.odf_list.length; i++) {
+        odf_name = profile.odf_list[i].name;
+        if(odf_name[odf_name.length-2] == '_'){
+            odf_name = odf_name.substr(0, odf_name.length-2) + '-' + odf_name.substr(odf_name.length-1);
         }
-        // df_name = profile.df_list[i].name.replace(/_/g, '-')
-        df_func[df_name] = profile.df_list[i];
-        profile.df_list[i] = df_name;
-        console.log(df_name);
+        odf_func[odf_name] = profile.odf_list[i];
+		profile.odf_list[i] = odf_name;
+		profile['df_list'].push(odf_name);
+        console.log(odf_name);
     }
-
-    function pull (odf_name, data) {
+	
+    for (var i = 0; i < profile.idf_list.length; i++) {
+        idf_name = profile.idf_list[i].name;
+        if(idf_name[idf_name.length-2] == '_'){
+            idf_name = idf_name.substr(0, idf_name.length-2) + '-' + idf_name.substr(idf_name.length-1);
+        }
+        idf_func[idf_name] = profile.idf_list[i];
+		profile.idf_list[i] = idf_name;
+		profile['df_list'].push(idf_name);
+        console.log(idf_name);
+    }	
+	
+    function push(idf_name) {
+	    data = idf_func[idf_name]();
+	    if (data!=undefined) dan.push(idf_name, data);
+	}
+	
+    function pull(odf_name, data) {
         if (odf_name == 'Control') {
             switch (data[0]) {
             case 'SET_DF_STATUS':
@@ -40,15 +59,14 @@ const dai = function (profile, ida) {
                 break;
             }
         } else {
-            df_func[odf_name](data);
+            odf_func[odf_name](data);
         }
     }
 
     function init_callback (result) {
         console.log('register:', result);
         document.title = profile.d_name;
-        console.log(ida);
-        ida.iot_app(profile);
+        ida.ida_init();
     }
 
     function deregisterCallback (result) {
@@ -64,5 +82,5 @@ const dai = function (profile, ida) {
     window.onclose = deregister;
     window.onpagehide = deregister;
 
-    dan.init(pull, csmapi.get_endpoint(), mac_addr, profile, init_callback);
+    dan.init(push, pull, csmapi.get_endpoint(), mac_addr, profile, init_callback);
 };

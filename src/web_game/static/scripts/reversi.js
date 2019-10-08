@@ -365,6 +365,89 @@ function ReversiGame() {
 
 let game = new ReversiGame();
 
+var ReversiAPI = {
+  UI: UI,
+  EventHandlers: {
+    'PointerMoved': ()=> {},
+    'BoardUpdated': ()=> {},
+    'BoardReset': ()=> {}
+  },
+  on:(event_name, callback)=> {
+    ReversiAPI.EventHandlers[event_name] = callback;
+  }
+};
+
+let RequestEmmiter = {
+  reset: ()=> {
+    game.newBoard();
+    RequestEmmiter.setBluePointer([3, 3]);
+    RequestEmmiter.setRedPointer([3, 4]);
+    document.getElementById('reset-button').blur();
+    RequestEmmiter.reflashBoard();
+  },
+  setRedPointer: (position)=> {
+    UI.setRedPointer(position);
+    ReversiAPI.EventHandlers.PointerMoved({
+      player: -1,
+      position: position
+    });
+  },
+  setBluePointer: (position)=> {
+    UI.setBluePointer(position);
+    ReversiAPI.EventHandlers.PointerMoved({
+      player: 1,
+      position: position
+    });
+  },
+  setPosition: (player, position)=> {
+    let turn = game.returnPlayerTurn();
+    if(player !== turn) {
+      UI.flashStatus('Not your turn.');
+      return 0;
+    }
+    let result = game.setPosition(player, position);
+    if(result>0) {
+      RequestEmmiter.reflashBoard(position);
+    }
+    else {
+      UI.flashStatus('You cannot set here.');
+    }
+  },
+  reflashBoard: (position)=> {
+    let scores = game.returnScores();
+    let player_turn = game.returnPlayerTurn();
+    let board = game.returnBoard();
+    ReversiAPI.EventHandlers.BoardUpdated({
+      turn: player_turn,
+      scores: scores,
+      position: position,
+      board: board
+    });
+    UI.renderBoard(board, position);
+    // console.log(game.returnBoard());
+    // try {
+    //   throw new Error();
+    // } catch (e) {
+    //   console.log(e.stack);
+    // } finally {
+    //
+    // }
+    UI.setRightScore(scores[0]);
+    UI.setLeftScore(scores[1]);
+
+    if(player_turn === 1) {
+      UI.setBoardStatus('It is Blue\'s turn');
+      UI.disableRedPointer();
+      UI.enableBluePointer();
+    }
+    else if(player_turn === -1){
+      UI.setBoardStatus('It is Red\'s turn');
+      UI.disableBluePointer();
+      UI.enableRedPointer();
+    }
+  }
+};
+
 let debugFunctions = {
   initailize: ()=> {
     window.document.onkeydown = (evt)=> {
@@ -372,31 +455,31 @@ let debugFunctions = {
       let charCode = evt.keyCode || evt.which;
       let charStr = String.fromCharCode(charCode).toLowerCase();
       if(charStr==='w') {
-        UI.setRedPointer([UI.RedPointer[0]-1, UI.RedPointer[1]]);
+        RequestEmmiter.setRedPointer([UI.RedPointer[0]-1, UI.RedPointer[1]]);
       }
       else if(charStr==='a') {
-        UI.setRedPointer([UI.RedPointer[0], UI.RedPointer[1]-1]);
+        RequestEmmiter.setRedPointer([UI.RedPointer[0], UI.RedPointer[1]-1]);
       }
       else if(charStr==='s') {
-        UI.setRedPointer([UI.RedPointer[0]+1, UI.RedPointer[1]]);
+        RequestEmmiter.setRedPointer([UI.RedPointer[0]+1, UI.RedPointer[1]]);
       }
       else if(charStr==='d') {
-        UI.setRedPointer([UI.RedPointer[0], UI.RedPointer[1]+1]);
+        RequestEmmiter.setRedPointer([UI.RedPointer[0], UI.RedPointer[1]+1]);
       }
       else if(charStr===' ') {
         RequestEmmiter.setPosition(-1, UI.RedPointer);
       }
       else if(charCode===38) {
-        UI.setBluePointer([UI.BluePointer[0]-1, UI.BluePointer[1]]);
+        RequestEmmiter.setBluePointer([UI.BluePointer[0]-1, UI.BluePointer[1]]);
       }
       else if(charCode===37) {
-        UI.setBluePointer([UI.BluePointer[0], UI.BluePointer[1]-1]);
+        RequestEmmiter.setBluePointer([UI.BluePointer[0], UI.BluePointer[1]-1]);
       }
       else if(charCode===40) {
-        UI.setBluePointer([UI.BluePointer[0]+1, UI.BluePointer[1]]);
+        RequestEmmiter.setBluePointer([UI.BluePointer[0]+1, UI.BluePointer[1]]);
       }
       else if(charCode===39) {
-        UI.setBluePointer([UI.BluePointer[0], UI.BluePointer[1]+1]);
+        RequestEmmiter.setBluePointer([UI.BluePointer[0], UI.BluePointer[1]+1]);
       }
       else if(charCode===191) {
         RequestEmmiter.setPosition(1, UI.BluePointer);
@@ -427,60 +510,6 @@ let debugFunctions = {
   }
 };
 
-let RequestEmmiter = {
-  reset: ()=> {
-    game.newBoard();
-    UI.setBluePointer([3, 3]);
-    UI.setRedPointer([3, 4]);
-    document.getElementById('reset-button').blur();
-    RequestEmmiter.reflashBoard();
-  },
-  setPosition: (player, position)=> {
-    let turn = game.returnPlayerTurn();
-    if(player !== turn) {
-      UI.flashStatus('Not your turn.');
-      return 0;
-    }
-    let result = game.setPosition(player, position);
-    if(result>0) {
-      RequestEmmiter.reflashBoard(position);
-    }
-    else {
-      UI.flashStatus('You cannot set here.');
-    }
-  },
-  reflashBoard: (position)=> {
-    let scores = game.returnScores();
-    let player_turn = game.returnPlayerTurn();
-    UI.renderBoard(game.returnBoard(), position);
-    // console.log(game.returnBoard());
-    // try {
-    //   throw new Error();
-    // } catch (e) {
-    //   console.log(e.stack);
-    // } finally {
-    //
-    // }
-    UI.setRightScore(scores[0]);
-    UI.setLeftScore(scores[1]);
-
-    if(player_turn === 1) {
-      UI.setBoardStatus('It is Blue\'s turn');
-      UI.disableRedPointer();
-      UI.enableBluePointer();
-    }
-    else if(player_turn === -1){
-      UI.setBoardStatus('It is Red\'s turn');
-      UI.disableBluePointer();
-      UI.enableRedPointer();
-    }
-  }
-};
-
-var ReversiAPI = {
-  UI: UI
-};
-
 //initailize
 function initailizeReversi () {
   if(debug) {
@@ -493,8 +522,8 @@ function initailizeReversi () {
 
   setTimeout(()=> {
     game.newBoard();
-    UI.setBluePointer([3, 3]);
-    UI.setRedPointer([3, 4]);
+    RequestEmmiter.setBluePointer([3, 3]);
+    RequestEmmiter.setRedPointer([3, 4]);
     RequestEmmiter.reflashBoard();
     UI.hideLoadingStatus();
   }, 300);
