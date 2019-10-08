@@ -200,9 +200,6 @@ let debugFunctions = {
           UI.showRedPointer();
         }
       }
-      else {
-        alert(charStr);
-      }
     };
   }
 };
@@ -218,7 +215,7 @@ function initailizeReversi () {
   setTimeout(()=> {
     UI.setRedPointer([0, 0]);
     UI.setBluePointer([0, 7]);
-    UI.setBoardStatus('Board num 000');
+    UI.setBoardStatus('Red\'s turn');
     UI.setRightScore(0);
     UI.setLeftScore(0);
     UI.setBlueMeta('Player 1', 'waiting player...');

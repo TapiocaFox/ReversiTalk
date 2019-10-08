@@ -2,6 +2,11 @@
   font-family: 'Roboto', sans-serif;
   src: url("https://fonts.googleapis.com/css?family=Roboto");
 }
+@media only screen and (max-width: 500px) {
+  .reversi-description {
+    display: none !important;
+  }
+}
 .noversi-header {
   display: inline-block;
   z-index: 99999;
@@ -119,13 +124,21 @@
   -webkit-font-smoothing: antialiased;
 }
 .reversi-container {
+  float: left;
   background-color: #37474F;
   border-radius: 16px;
+  display: inline-block;
   box-shadow: 0 3px 8px 0 rgba(0, 0, 0, 0.5), 0 3px 20px 0 rgba(0, 0, 0, 0.19);
-  position: absolute;
+  position: relative;
   width: 300px;
   height: 440px;
-  top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%)
+  /* top:50%;left:50%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%) */
+}
+.reversi-description {
+  display: inline-block;
+  margin-left: 50px;
+  height: 440px;
+  max-width: 450px;
 }
 .reversi-point-left{
   position: absolute;
@@ -163,6 +176,7 @@
   outline: none;
   font-family: inherit;
   display: inline-block;
+  font-weight: bold;
   width: auto;
   border: none;
   height: 100%;
@@ -181,13 +195,13 @@
 .reversi-button:hover {
   background-color: white;
   color: #212121;
-  font-size: 110%;
+  font-size: inherit;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 }
 .reversi-button:active {
   background-color: rgba(255, 255, 255, 0.0);
   color: #fff;
-  font-size: 110%;
+  font-size: 103%;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
 }
 .reversi-point-anime {
@@ -390,10 +404,10 @@
 }
 @keyframes wobble {
    0% { transform: translateX(0%); }
-   15% { transform: translateX(-6%) rotate(-4deg); }
-   30% { transform: translateX(4%) rotate(2deg); }
-   45% { transform: translateX(-3%) rotate(-1deg); }
-   60% { transform: translateX(2%) rotate(0.5deg); }
+   15% { transform: translateX(-8%) rotate(-4deg); }
+   30% { transform: translateX(7%) rotate(2deg); }
+   45% { transform: translateX(-5%) rotate(-1deg); }
+   60% { transform: translateX(3%) rotate(0.5deg); }
    75% { transform: translateX(-1%) rotate(-0.5deg); }
    100% { transform: translateX(0%); }
 }

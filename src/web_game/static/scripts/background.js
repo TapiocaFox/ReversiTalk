@@ -18,7 +18,8 @@ presets.o = function (x, y, s, dx, dy) {
             ctx.beginPath();
             ctx.arc(this.x + + Math.sin((50 + x + (t / 10)) / 100) * 3, this.y + + Math.sin((45 + x + (t / 10)) / 100) * 4, this.r, 0, 2 * Math.PI, false);
             ctx.lineWidth = this.w;
-            ctx.strokeStyle = '#f44183';
+            // console.log(s);
+            ctx.strokeStyle = 'rgba(244, 65, 131, '+s/1.2+')';
             ctx.stroke();
         }
     }
@@ -56,8 +57,8 @@ presets.x = function (x, y, s, dx, dy, dr, r) {
             ctx.translate(this.x + Math.sin((x + (t / 10)) / 100) * 5, this.y + Math.sin((10 + x + (t / 10)) / 100) * 2);
             ctx.rotate(this.r * Math.PI / 180);
 
-            line(-1, -1, 1, 1, '#4286f4');
-            line(1, -1, -1, 1, '#4286f4');
+            line(-1, -1, 1, 1, 'rgba(66, 134, 244, '+s/1.2+')');
+            line(1, -1, -1, 1, 'rgba(66, 134, 244, '+s/1.2+')');
 
             ctx.restore();
         }
@@ -68,8 +69,8 @@ let initElements = ()=> {
   elements = [];
   for(var x = 0; x < Canvas.width; x++) {
       for(var y = 0; y < Canvas.height; y++) {
-          if(Math.round(Math.random() * 8000) == 1) {
-              var s = ((Math.random() * 5) + 1) / 10;
+          if(Math.round(Math.random() * 9000) == 1) {
+              var s = ((Math.random() * 5) + 3) / 10;
               if(Math.round(Math.random()) == 1)
                   elements.push(presets.o(x, y, s, 0, 0));
               else
