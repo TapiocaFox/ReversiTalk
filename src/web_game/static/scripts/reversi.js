@@ -8,8 +8,8 @@ const debug = true;
 let UI = {
   BluePointer: [0,0],
   RedPointer: [0,0],
-  ShowBluePointer: true,
-  ShowRedPointer: true,
+  EnableBluePointer: true,
+  EnableRedPointer: true,
   initBoard: ()=> {
     let ReversiBoard1 = document.getElementById('reversi-board-1');
     let inner = "";
@@ -63,7 +63,7 @@ let UI = {
     document.getElementById("p2-status").innerHTML =status;
   },
   setRedPointer: (position)=> {
-    if(UI.ShowRedPointer&&0<=position[0]&&position[0]<=7&&0<=position[0]&&position[1]<=7) {
+    if(UI.EnableRedPointer&&0<=position[0]&&position[0]<=7&&0<=position[1]&&position[1]<=7) {
       let x=document.getElementById('r'+UI.RedPointer[0]+'c'+UI.RedPointer[1]);
       x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-pointer\"></div>", "");
       UI.RedPointer = position;
@@ -72,7 +72,7 @@ let UI = {
     }
   },
   setBluePointer: (position)=> {
-    if(UI.ShowBluePointer&&0<=position[0]&&position[0]<=7&&0<=position[0]&&position[1]<=7) {
+    if(UI.EnableBluePointer&&0<=position[0]&&position[0]<=7&&0<=position[1]&&position[1]<=7) {
       let x=document.getElementById('r'+UI.BluePointer[0]+'c'+UI.BluePointer[1]);
       x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-pointer\"></div>", "");
       UI.BluePointer = position;
@@ -80,25 +80,25 @@ let UI = {
       y.innerHTML += "<div class=\"reversi-board-blue-pointer\"></div>";
     }
   },
-  showBluePointer: ()=> {
-    UI.ShowBluePointer = true;
-    let y=document.getElementById('r'+UI.BluePointer[0]+'c'+UI.BluePointer[1]);
-    y.innerHTML += "<div class=\"reversi-board-blue-pointer\"></div>";
-  },
-  hideBluePointer: ()=> {
-    UI.ShowBluePointer = false;
+  enableBluePointer: ()=> {
+    UI.EnableBluePointer = true;
     let x=document.getElementById('r'+UI.BluePointer[0]+'c'+UI.BluePointer[1]);
-    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-pointer\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-pointer-hide\"></div>", "<div class=\"reversi-board-blue-pointer\"></div>");
   },
-  showRedPointer: ()=> {
-    UI.ShowRedPointer = true;
-    let y=document.getElementById('r'+UI.RedPointer[0]+'c'+UI.RedPointer[1]);
-    y.innerHTML += "<div class=\"reversi-board-red-pointer\"></div>";
+  disableBluePointer: ()=> {
+    UI.EnableBluePointer = false;
+    let x=document.getElementById('r'+UI.BluePointer[0]+'c'+UI.BluePointer[1]);
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-blue-pointer\"></div>", "<div class=\"reversi-board-blue-pointer-hide\"></div>");
   },
-  hideRedPointer: ()=> {
-    UI.ShowRedPointer = false;
+  enableRedPointer: ()=> {
+    UI.EnableRedPointer = true;
     let x=document.getElementById('r'+UI.RedPointer[0]+'c'+UI.RedPointer[1]);
-    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-pointer\"></div>", "");
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-pointer-hide\"></div>", "<div class=\"reversi-board-red-pointer\"></div>");
+  },
+  disableRedPointer: ()=> {
+    UI.EnableRedPointer = false;
+    let x=document.getElementById('r'+UI.RedPointer[0]+'c'+UI.RedPointer[1]);
+    x.innerHTML = x.innerHTML.replace("<div class=\"reversi-board-red-pointer\"></div>", "<div class=\"reversi-board-red-pointer-hide\"></div>");
   },
   renderBoard: (board)=> {
 
@@ -185,19 +185,19 @@ let debugFunctions = {
         UI.setBluePointer([UI.BluePointer[0], UI.BluePointer[1]+1]);
       }
       else if(charStr=='b') {
-        if(UI.ShowBluePointer) {
-          UI.hideBluePointer();
+        if(UI.EnableBluePointer) {
+          UI.disableBluePointer();
         }
         else {
-          UI.showBluePointer();
+          UI.enableBluePointer();
         }
       }
       else if(charStr=='r') {
-        if(UI.ShowRedPointer) {
-          UI.hideRedPointer();
+        if(UI.EnableRedPointer) {
+          UI.disableRedPointer();
         }
         else {
-          UI.showRedPointer();
+          UI.enableRedPointer();
         }
       }
     };
@@ -215,11 +215,11 @@ function initailizeReversi () {
   setTimeout(()=> {
     UI.setRedPointer([0, 0]);
     UI.setBluePointer([0, 7]);
-    UI.setBoardStatus('Red\'s turn');
+    UI.setBoardStatus('It is Blue\'s turn');
     UI.setRightScore(0);
     UI.setLeftScore(0);
-    UI.setBlueMeta('Player 1', 'waiting player...');
-    UI.setRedMeta('Player 2', 'waiting player...');
+    UI.setBlueMeta('Blue', 'IoTtalk controller not connected');
+    UI.setRedMeta('Red', 'IoTtalk controller not connected');
     UI.hideLoadingStatus();
 
     if(debug) {
