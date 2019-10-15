@@ -18,9 +18,12 @@ function init (data) {
   console.log(profile, data);
   ReversiAPI.UI.setDescriptionStatus((profile.d_name?'Connected as "'+profile.d_name+'". ':"Connect Failed. ")+'<br/><span onClick="setIoTtalkEndpoint()">Click to set IoTtalk endpoint</span>.');
   ReversiAPI.on('BoardUpdated', (data)=> {
+    console.log('BoardUpdated');
     dan.push('ReversiMonitor', {event: 'BoardUpdated', data: data});
   });
   ReversiAPI.on('PointerMoved', (data)=> {
+    console.log('PointerMoved');
+
     dan.push('ReversiMonitor', {event: 'PointerMoved', data: data});
   });
   ReversiAPI.on('move', ()=> {
@@ -31,28 +34,29 @@ function init (data) {
 
 function ReversiBlueController (data) {
   let command_code = data[0];
-  if(data[1].status) {
-
+  if(data[1]&&data[1].title) {
+    ReversiAPI.UI.setBlueMeta(data[1].title, data[1].status);
+    RequestEmmiter.emitBoardUpdate();
   }
-  else {
-    ReversiAPI.UI.setBlueMeta('IoTPlayerBlue', 'IoTtalk controller.');
-  }
+  // else {
+  //   ReversiAPI.UI.setBlueMeta('IoTPlayerBlue', 'IoTtalk controller.');
+  // }
   console.log(data);
   // left
   if(command_code === 1) {
-    ReversiAPI.UI.setBluePointer([ReversiAPI.UI.BluePointer[0], ReversiAPI.UI.BluePointer[1]-1]);
+    RequestEmmiter.setBluePointer([ReversiAPI.UI.BluePointer[0], ReversiAPI.UI.BluePointer[1]-1]);
   }
   // right
   else if(command_code === 2) {
-    ReversiAPI.UI.setBluePointer([ReversiAPI.UI.BluePointer[0], ReversiAPI.UI.BluePointer[1]+1]);
+    RequestEmmiter.setBluePointer([ReversiAPI.UI.BluePointer[0], ReversiAPI.UI.BluePointer[1]+1]);
   }
   // up
   else if(command_code === 3) {
-    ReversiAPI.UI.setBluePointer([ReversiAPI.UI.BluePointer[0]-1, ReversiAPI.UI.BluePointer[1]]);
+    RequestEmmiter.setBluePointer([ReversiAPI.UI.BluePointer[0]-1, ReversiAPI.UI.BluePointer[1]]);
   }
   // down
   else if(command_code === 4) {
-    ReversiAPI.UI.setBluePointer([ReversiAPI.UI.BluePointer[0]+1, ReversiAPI.UI.BluePointer[1]]);
+    RequestEmmiter.setBluePointer([ReversiAPI.UI.BluePointer[0]+1, ReversiAPI.UI.BluePointer[1]]);
   }
   // set
   else if(command_code === 0) {
@@ -63,27 +67,28 @@ function ReversiBlueController (data) {
 function ReversiRedController (data) {
   let command_code = data[0];
   console.log(data);
-  if(data[1].status) {
-
+  if(data[1]&&data[1].title) {
+    ReversiAPI.UI.setRedMeta(data[1].title, data[1].status);
+    RequestEmmiter.emitBoardUpdate();
   }
-  else {
-    ReversiAPI.UI.setBlueMeta('IoTPlayerRed', 'IoTtalk controller.');
-  }
+  // else {
+  //   ReversiAPI.UI.setRedMeta('IoTPlayerRed', 'IoTtalk controller.');
+  // }
   // left
   if(command_code === 1) {
-    ReversiAPI.UI.setRedPointer([ReversiAPI.UI.RedPointer[0], ReversiAPI.UI.RedPointer[1]-1]);
+    RequestEmmiter.setRedPointer([ReversiAPI.UI.RedPointer[0], ReversiAPI.UI.RedPointer[1]-1]);
   }
   // right
   else if(command_code === 2) {
-    ReversiAPI.UI.setRedPointer([ReversiAPI.UI.RedPointer[0], ReversiAPI.UI.RedPointer[1]+1]);
+    RequestEmmiter.setRedPointer([ReversiAPI.UI.RedPointer[0], ReversiAPI.UI.RedPointer[1]+1]);
   }
   // up
   else if(command_code === 3) {
-    ReversiAPI.UI.setRedPointer([ReversiAPI.UI.RedPointer[0]-1, ReversiAPI.UI.RedPointer[1]]);
+    RequestEmmiter.setRedPointer([ReversiAPI.UI.RedPointer[0]-1, ReversiAPI.UI.RedPointer[1]]);
   }
   // down
   else if(command_code === 4) {
-    ReversiAPI.UI.setRedPointer([ReversiAPI.UI.RedPointer[0]+1, ReversiAPI.UI.RedPointer[1]]);
+    RequestEmmiter.setRedPointer([ReversiAPI.UI.RedPointer[0]+1, ReversiAPI.UI.RedPointer[1]]);
   }
   // set
   else if(command_code === 0) {

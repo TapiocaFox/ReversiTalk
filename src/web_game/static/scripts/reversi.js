@@ -365,7 +365,9 @@ function ReversiGame() {
 
 let game = new ReversiGame();
 
-var ReversiAPI = {
+let RequestEmmiter;
+
+let ReversiAPI = {
   UI: UI,
   EventHandlers: {
     'PointerMoved': ()=> {},
@@ -374,10 +376,11 @@ var ReversiAPI = {
   },
   on:(event_name, callback)=> {
     ReversiAPI.EventHandlers[event_name] = callback;
-  }
+  },
+  RequestEmmiter: RequestEmmiter
 };
 
-let RequestEmmiter = {
+RequestEmmiter = {
   reset: ()=> {
     game.newBoard();
     RequestEmmiter.setBluePointer([3, 3]);
@@ -450,6 +453,17 @@ let RequestEmmiter = {
       // UI.disableBluePointer();
       // UI.enableRedPointer();
     }
+  },
+  emitBoardUpdate: (position)=> {
+    let scores = game.returnScores();
+    let player_turn = game.returnPlayerTurn();
+    let board = game.returnBoard();
+    ReversiAPI.EventHandlers.BoardUpdated({
+      turn: player_turn,
+      scores: scores,
+      position: position,
+      board: board
+    });
   }
 };
 

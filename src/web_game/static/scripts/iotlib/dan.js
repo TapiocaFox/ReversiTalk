@@ -1,7 +1,7 @@
 var dan = (function () {
     var RETRY_COUNT = 3;
     var RETRY_INTERVAL = 2000;
-    var POLLING_INTERVAL = 500;
+    var POLLING_INTERVAL = 300;
     var _pull;
     var _push;
     var _mac_addr = '';
@@ -14,7 +14,7 @@ var dan = (function () {
     var _odf_timestamp = {};
     var _suspended = false;
     var _ctl_timestamp = '';
-    var _password = '';	
+    var _password = '';
 
     function init (push, pull, endpoint, mac_addr, profile, callback) {
         _pull = pull;
@@ -33,7 +33,7 @@ var dan = (function () {
 
     function register (endpoint, profile, callback) {
         //profile['d_name'] = (Math.floor(Math.random() * 99)).toString() + '.' + profile['dm_name'];
-                 
+
         _profile = profile;
         csmapi.set_endpoint(endpoint);
 
@@ -47,7 +47,7 @@ var dan = (function () {
 		    _idf_list = profile['idf_list'].slice();
 		    _odf_list = profile['odf_list'].slice();
 		    _df_list = profile['df_list'].slice();
-                    			
+
 
                     for (var i = 0; i < _df_list.length; i++) {
                         _df_selected[_df_list[i]] = false;
@@ -56,7 +56,7 @@ var dan = (function () {
                         _odf_timestamp[_odf_list[i]] = '';
                     }
                     _ctl_timestamp = '';
-                    _suspended = false;					
+                    _suspended = false;
                     setTimeout(pull_ctl, 0);
                 }
                 callback(true);
@@ -119,7 +119,7 @@ var dan = (function () {
             }
 
             setTimeout(pull_odf, POLLING_INTERVAL, index + 1);
-			
+
         }
         csmapi.pull(_mac_addr, _password,_odf_name, pull_odf_callback);
     }
@@ -133,17 +133,17 @@ var dan = (function () {
             setTimeout(pull_ctl, POLLING_INTERVAL);
             return;
         }
-	    
+
         var _idf_name = _idf_list[index];
         if (!_df_selected[_idf_name]) {
             push_idf(index + 1);
             return;
         }
-	    
+
         _push(_idf_list[index]);
         setTimeout(push_idf, POLLING_INTERVAL, index + 1);
-    }	
-	
+    }
+
     function handle_command_message (data) {
         switch (data[0]) {
         case 'RESUME':
