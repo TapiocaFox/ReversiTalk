@@ -1,5 +1,5 @@
 # ReversiTalk
-Reversi chess game for IoTtalk. Which is using the source code of magneticchen/Noversi
+Reversi chess game and neural network AI for IoTtalk. Which is using the source code of magneticchen/Noversi
 
 # gallery
 ![](imgs/ReversiTalk.png)
