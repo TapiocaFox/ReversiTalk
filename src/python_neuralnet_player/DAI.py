@@ -29,11 +29,11 @@ DAN.profile['d_name']= 'Nodenet reversi AI'
 
 def resume():
     print('Sending information', end='', flush=True)
-    i = 3
+    i = 5
     while(i):
         i -= 1
         time.sleep(1)
-        DAN.push('ReversiTalkAIOutput', -1, {'event': 'updateProfile', 'data':{'title': 'NodenetAI', 'status': 'Controlled by AI'}})
+        DAN.push('ReversiTalkAIOutput', -1, {'event': 'emitBoardUpdate', 'data': 'AI is fetching data.'})
         print('.', end='', flush=True)
     print('Information sent.')
 DAN.device_registration_with_retry(ServerURL, Reg_addr, resume)
@@ -62,18 +62,27 @@ while True:
                     print('AI decided to move to the location '+str(Control_state['Position'])+'.')
                     # print(debug)
                     if Control_Type == 'Direct':
+                        for value in debug:
+                            if value['DropPoint'] == list(Control_state['Position']):
+                                DAN.push('ReversiTalkAIOutput', -1, {'event': 'updateProfile', 'data':{'title': 'NodenetAI', 'status': 'Controlled by AI with '+str(int(value['Sum']*100))+'% confidence.'}})
+                        time.sleep(1.5)
                         DAN.push('ReversiTalkAIOutput', -1, {'event': 'setPosition', 'data': Control_state['Position']})
                         print('Emitted signal.')
+
                     elif Control_Type == 'Moving':
+                        for value in debug:
+                            if value['DropPoint'] == list(Control_state['Position']):
+                                DAN.push('ReversiTalkAIOutput', -1, {'event': 'updateProfile', 'data':{'title': 'NodenetAI', 'status': 'Controlled by AI with '+str(int(value['Sum']*100))+'% confidence.'}})
                         Current_mode = 'Controling'
                         print('Controlling...')
-
+                        time.sleep(1.5)
 
         if Current_mode == 'Controling':
             if(Control_state['CurrentPosition'] == list(Control_state['Position'])):
                 DAN.push('ReversiTalkAIOutput', 0)
                 print('Moved to '+str(Control_state['CurrentPosition'])+'! Set position.')
                 Current_mode = 'Waiting'
+                time.sleep(2)
             elif(Control_state['CurrentPosition'] != list(Control_state['Position'])):
                 row_offset = Control_state['Position'][0] - Control_state['CurrentPosition'][0]
                 col_offset = Control_state['Position'][1] - Control_state['CurrentPosition'][1]

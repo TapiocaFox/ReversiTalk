@@ -418,6 +418,7 @@ RequestEmmiter = {
       RequestEmmiter.reflashBoard(position);
     }
     else {
+      RequestEmmiter.emitBoardUpdate();
       UI.flashStatus('You cannot set here.');
     }
   },
@@ -440,8 +441,8 @@ RequestEmmiter = {
     // } finally {
     //
     // }
-    UI.setRightScore(scores[0]);
-    UI.setLeftScore(scores[1]);
+    UI.setRightScore(scores[1]);
+    UI.setLeftScore(scores[0]);
 
     if(player_turn === 1) {
       UI.setBoardStatus('It is Blue\'s turn.');

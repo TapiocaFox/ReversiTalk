@@ -29,6 +29,8 @@ function init (data) {
   ReversiAPI.on('move', ()=> {
 
   });
+  setInterval(RequestEmmiter.emitBoardUpdate, 5000);
+
   setTimeout(()=> {ReversiAPI.UI.flashStatus('Connected to IoTtalk as '+profile.d_name);}, 1000)
 }
 
@@ -36,11 +38,16 @@ function ReversiBlueController (data) {
   let command_code = data[0];
   if(data[1]&&data[1].event === 'updateProfile') {
     ReversiAPI.UI.setBlueMeta(data[1].data.title, data[1].data.status);
-    RequestEmmiter.emitBoardUpdate();
   }
   else if(data[1]&&data[1].event === 'setPosition') {
     RequestEmmiter.setBluePointer([data[1].data[0], data[1].data[1]]);
     RequestEmmiter.setPosition(1, ReversiAPI.UI.BluePointer);
+  }
+  else if(data[1]&&data[1].event === 'emitBoardUpdate') {
+    UI.flashStatus(data[1].data);
+    RequestEmmiter.emitBoardUpdate();
+    setTimeout(RequestEmmiter.emitBoardUpdate, 1000);
+    setTimeout(RequestEmmiter.emitBoardUpdate, 2000);
   }
   // else {
   //   ReversiAPI.UI.setBlueMeta('IoTPlayerBlue', 'IoTtalk controller.');
@@ -73,11 +80,18 @@ function ReversiRedController (data) {
   console.log(data);
   if(data[1]&&data[1].event === 'updateProfile') {
     ReversiAPI.UI.setRedMeta(data[1].data.title, data[1].data.status);
-    RequestEmmiter.emitBoardUpdate();
+
   }
   else if(data[1]&&data[1].event === 'setPosition') {
     RequestEmmiter.setRedPointer([data[1].data[0], data[1].data[1]]);
     RequestEmmiter.setPosition(-1, ReversiAPI.UI.RedPointer);
+  }
+  else if(data[1]&&data[1].event === 'emitBoardUpdate') {
+    UI.flashStatus(data[1].data);
+    RequestEmmiter.emitBoardUpdate();
+    setTimeout(RequestEmmiter.emitBoardUpdate, 1000);
+    setTimeout(RequestEmmiter.emitBoardUpdate, 2000);
+
   }
   // else {
   //   ReversiAPI.UI.setRedMeta('IoTPlayerRed', 'IoTtalk controller.');
