@@ -34,9 +34,13 @@ function init (data) {
 
 function ReversiBlueController (data) {
   let command_code = data[0];
-  if(data[1]&&data[1].title) {
-    ReversiAPI.UI.setBlueMeta(data[1].title, data[1].status);
+  if(data[1]&&data[1].event === 'updateProfile') {
+    ReversiAPI.UI.setBlueMeta(data[1].data.title, data[1].data.status);
     RequestEmmiter.emitBoardUpdate();
+  }
+  else if(data[1]&&data[1].event === 'setPosition') {
+    RequestEmmiter.setBluePointer([data[1].data[0], data[1].data[1]]);
+    RequestEmmiter.setPosition(1, ReversiAPI.UI.BluePointer);
   }
   // else {
   //   ReversiAPI.UI.setBlueMeta('IoTPlayerBlue', 'IoTtalk controller.');
@@ -67,9 +71,13 @@ function ReversiBlueController (data) {
 function ReversiRedController (data) {
   let command_code = data[0];
   console.log(data);
-  if(data[1]&&data[1].title) {
-    ReversiAPI.UI.setRedMeta(data[1].title, data[1].status);
+  if(data[1]&&data[1].event === 'updateProfile') {
+    ReversiAPI.UI.setRedMeta(data[1].data.title, data[1].data.status);
     RequestEmmiter.emitBoardUpdate();
+  }
+  else if(data[1]&&data[1].event === 'setPosition') {
+    RequestEmmiter.setRedPointer([data[1].data[0], data[1].data[1]]);
+    RequestEmmiter.setPosition(-1, ReversiAPI.UI.RedPointer);
   }
   // else {
   //   ReversiAPI.UI.setRedMeta('IoTPlayerRed', 'IoTtalk controller.');

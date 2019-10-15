@@ -9,6 +9,7 @@ import sys
 # Mode for Loop cycle and control state
 Current_mode = 'Waiting' # Controling, Waiting
 Control_state = {'CurrentPosition': [0, 0], 'Position': [0, 0]}
+Control_Type = 'Direct' # Direct, Moving
 
 # Nodenet AI settings
 AI_path = './AI'
@@ -32,7 +33,7 @@ def resume():
     while(i):
         i -= 1
         time.sleep(1)
-        DAN.push('ReversiTalkAIOutput', -1, {'title': 'NodenetAI', 'status': 'Controlled by AI'})
+        DAN.push('ReversiTalkAIOutput', -1, {'event': 'updateProfile', 'data':{'title': 'NodenetAI', 'status': 'Controlled by AI'}})
         print('.', end='', flush=True)
     print('Information sent.')
 DAN.device_registration_with_retry(ServerURL, Reg_addr, resume)
@@ -53,15 +54,20 @@ while True:
             if Current_mode == 'Waiting' and ODF_data['event'] == 'BoardUpdated' and ODF_data['data']['turn'] == AI_Player:
                 sess = ReversiSessions()
                 sess.setBoard(ODF_data['data']['board'])
-                print('AI\'s turn.')
+                print('[[[AI\'s turn]]]')
                 reversi.ReversiUtility.printBoard(sess.Boardnow)
                 print('AI is thinking.')
                 if(sess.cansetBoard(AI_Player)):
-                    Control_state['Position'] = AI.getaphlabetaDropPoint(sess, 0.01)[0]
+                    Control_state['Position'], debug = AI.getaphlabetaDropPoint(sess, 0, 0.01)
                     print('AI decided to move to the location '+str(Control_state['Position'])+'.')
-                    print('Controlling...')
+                    # print(debug)
+                    if Control_Type == 'Direct':
+                        DAN.push('ReversiTalkAIOutput', -1, {'event': 'setPosition', 'data': Control_state['Position']})
+                        print('Emitted signal.')
+                    elif Control_Type == 'Moving':
+                        Current_mode = 'Controling'
+                        print('Controlling...')
 
-                    Current_mode = 'Controling'
 
         if Current_mode == 'Controling':
             if(Control_state['CurrentPosition'] == list(Control_state['Position'])):
