@@ -65,7 +65,7 @@ const dai = function (profile, ida) {
 
     function init_callback (result) {
         console.log('register:', result);
-        document.title = profile.d_name;
+        document.title = `ReversiTalk: ${profile.d_name}`;
         ida.ida_init();
     }
 
